@@ -1,8 +1,27 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted } from "vue";
+const theme = ref("light");
+onMounted(() => {
+  const saved = localStorage.getItem("theme");
+  if (saved) {
+    theme.value = saved;
+    document.documentElement.setAttribute("data-theme", saved);
+  }
+});
+function toggleTheme() {
+  theme.value = theme.value === "light" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", theme.value);
+  localStorage.setItem("theme", theme.value);
+}
+</script>
 
 <template>
   <header>
-    <h1 class="text-gradient">SMOLGRAM</h1>
+    <h1 class="text-gradient">GYMOGRAM</h1>
+    <button @click="toggleTheme" class="theme-btn">
+      <i v-if="theme === 'light'" class="fa-solid fa-moon"></i>
+      <i v-else class="fa-solid fa-sun"></i>
+    </button>
   </header>
   <main>
     <slot />
@@ -29,7 +48,11 @@ main {
   max-width: 600px;
   margin: 0 auto;
 }
-
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 main {
   flex: 1;
 }
